@@ -1,11 +1,12 @@
-
-
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3b5998; 
-    padding: 10px 20px;
+    background-color: #007bff; /* Navbar background color */
+    padding: 10px 20px; /* Padding for navbar */
+    position: sticky; /* Make the navbar sticky */
+    top: 0; /* Stick to the top */
+    z-index: 1000; /* Ensure it appears above other content */
 }
 
 .navbar-left {
@@ -16,30 +17,49 @@
 .logo {
     display: flex;
     align-items: center;
-    color: white;
-    font-size: 24px;
 }
 
 .brand-name {
-    margin-left: 10px;
-    font-weight: bold;
+    margin-left: 10px; /* Spacing between icon and brand name */
+    color: white; /* Brand name color */
+    font-size: 1.5rem; /* Brand name font size */
 }
 
 .navbar-right {
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
+.nav-link {
+    color: white; /* Link color */
+    text-decoration: none; /* Remove underline */
+    margin: 0 15px; /* Spacing between links */
+    font-weight: bold; /* Font weight */
+    transition: color 0.3s; /* Transition for hover effect */
+}
 
+.nav-link:hover {
+    color: #e0e0e0; /* Change color on hover */
+}
+
+.menu-icon {
+    display: none; /* Initially hidden, can be shown for mobile */
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
+    .menu-icon {
+        display: block; /* Show menu icon on smaller screens */
+        cursor: pointer; /* Change cursor on hover */
     }
 
     .navbar-right {
-        margin-top: 10px;
+        display: none; /* Hide links, show menu icon only */
     }
 }
+
+
+
+
+
 

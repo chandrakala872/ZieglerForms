@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './SubmissionList.css'; // Import your CSS file for styles
 
 const SubmissionList = () => {
     const [submissions, setSubmissions] = useState([]);
@@ -10,13 +11,11 @@ const SubmissionList = () => {
         const fetchSubmissions = async () => {
             setLoading(true);
             try {
-                // Change to axios.get to fetch submissions
                 const response = await axios.get('http://localhost:5001/api/submissions');
-                setSubmissions(response.data); // Set the fetched data to submissions state
+                setSubmissions(response.data);
             } catch (error) {
-                // Handle errors appropriately
-                setError(error.response ? error.response.data : "Error fetching submissions.");
-                console.error("Error fetching submissions:", error);
+                setError(error.response ? error.response.data : "");
+                console.error("", error);
             } finally {
                 setLoading(false);
             }
@@ -25,27 +24,43 @@ const SubmissionList = () => {
         fetchSubmissions();
     }, []);
 
+    const downloadResponses = () => {
+        const blob = new Blob([JSON.stringify(submissions, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'submissions.json');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
-        <div className="submission-list" style={{ height: '20%', border: '2px solid black' }}>
-            <h2 style={{ paddingLeft: '45%', color: 'blue' }}>Submitted Forms</h2> 
-            <h1 style={{ color: 'darkblue' }}>Feel free to create one more</h1>
+        <div className="submission-list" style={{ height: 'auto', padding: '20px' }}>
+            <h2 style={{ textAlign: 'center', color: 'blue' }}>Submitted Forms</h2>
+            <h1 style={{ textAlign: 'center', color: 'darkblue' }}>Feel free to create one more</h1>
+            <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                <p>Total Responses: {submissions.length}</p>
+                <button onClick={downloadResponses} className="download-button">
+                    Download Responses
+                </button>
+            </div>
             {loading && <p>Loading submissions...</p>}
             {error && <p className="error-message">{error}</p>}
             {submissions.length === 0 && !loading && !error ? (
                 <p>No submissions yet.</p>
             ) : (
-                submissions.map((submission) => (
-                    <div key={submission.id || submission.name}>
-                        <h3>Submission</h3>
-                        <pre>{JSON.stringify(submission, null, 2)}</pre>
-                    </div>
-                ))
+                <div className="submission-container">
+                    {submissions.map((submission, index) => (
+                        <div key={submission.id || index} className="submission-item">
+                            <h3>Submission {index + 1}</h3>
+                            <pre>{JSON.stringify(submission, null, 2)}</pre>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );
 };
 
 export default SubmissionList;
-
-
-
